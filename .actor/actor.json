@@ -1,0 +1,58 @@
+{
+  "actorSpecification": 1,
+  "name": "ai-training-data-enricher",
+  "title": "AI Training Data Enricher & Validator",
+  "description": "Enterprise-grade data enrichment and validation for LLM fine-tuning datasets. Enriches with sentiment, entities, and embeddings. Detects duplicates using fuzzy matching. Validates schemas. Identifies PII for GDPR compliance. Outputs clean, deduplicated, validated datasets ready for AI training.",
+  "version": "1.0.0",
+  "input": "./input_schema.json",
+  "dockerfile": "./Dockerfile",
+  "readme": "./README.md",
+  "storages": {
+    "dataset": {
+      "actorSpecification": 1,
+      "title": "Enriched Training Data",
+      "description": "Cleaned, enriched, and validated training data with sentiment scores, named entities, duplicate flags, PII detection, and schema validation results.",
+      "views": {
+        "overview": {
+          "title": "Overview",
+          "description": "Quick view of enriched data with key metrics",
+          "transformation": {
+            "fields": [
+              "originalText",
+              "enrichment.sentiment",
+              "enrichment.entities",
+              "validation.isDuplicate",
+              "validation.hasPII",
+              "validation.schemaValid"
+            ]
+          },
+          "display": {
+            "component": "table",
+            "properties": {
+              "originalText": {
+                "label": "Original Text",
+                "format": "text"
+              },
+              "enrichment.sentiment": {
+                "label": "Sentiment Score",
+                "format": "number"
+              },
+              "enrichment.entities": {
+                "label": "Named Entities",
+                "format": "array"
+              },
+              "validation.isDuplicate": {
+                "label": "Is Duplicate",
+                "format": "boolean"
+              },
+              "validation.hasPII": {
+                "label": "Has PII",
+                "format": "boolean"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

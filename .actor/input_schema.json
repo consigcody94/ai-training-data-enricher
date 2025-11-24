@@ -1,0 +1,176 @@
+{
+  "title": "AI Training Data Enricher & Validator",
+  "description": "Configure how to enrich, validate, and clean your AI training dataset. This Actor processes raw training data and outputs production-ready datasets with enrichment, deduplication, and PII detection.",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "datasetId": {
+      "title": "Input Dataset ID",
+      "type": "string",
+      "description": "The ID of an Apify dataset containing raw training data. Each item should have at least a text field. You can also use a dataset from a previous Actor run.",
+      "editor": "textfield",
+      "pattern": "^[a-zA-Z0-9]+$",
+      "example": "abc123xyz"
+    },
+    "textField": {
+      "title": "Text field name",
+      "type": "string",
+      "description": "The name of the field in your dataset items that contains the main text content to process.",
+      "default": "text",
+      "editor": "textfield",
+      "pattern": "^[a-zA-Z0-9_]+$"
+    },
+    "enrichmentOptions": {
+      "title": "Enrichment Options",
+      "type": "object",
+      "description": "Select which enrichment features to apply to your data.",
+      "editor": "json",
+      "properties": {
+        "sentiment": {
+          "title": "Sentiment Analysis",
+          "type": "boolean",
+          "description": "Add sentiment scores (-1 to +1) to each text sample using AFINN lexicon.",
+          "default": true
+        },
+        "entities": {
+          "title": "Named Entity Recognition",
+          "type": "boolean",
+          "description": "Extract people, places, organizations, and other named entities from text.",
+          "default": true
+        },
+        "keywords": {
+          "title": "Keyword Extraction",
+          "type": "boolean",
+          "description": "Extract important keywords and phrases using TF-IDF scoring.",
+          "default": true
+        },
+        "language": {
+          "title": "Language Detection",
+          "type": "boolean",
+          "description": "Detect the language of each text sample.",
+          "default": true
+        },
+        "readability": {
+          "title": "Readability Metrics",
+          "type": "boolean",
+          "description": "Calculate readability scores (word count, sentence count, average words per sentence).",
+          "default": true
+        }
+      },
+      "default": {
+        "sentiment": true,
+        "entities": true,
+        "keywords": true,
+        "language": true,
+        "readability": true
+      }
+    },
+    "validationOptions": {
+      "title": "Validation Options",
+      "type": "object",
+      "description": "Configure validation and quality checks for your data.",
+      "editor": "json",
+      "properties": {
+        "detectDuplicates": {
+          "title": "Detect Duplicates",
+          "type": "boolean",
+          "description": "Identify duplicate or near-duplicate content using fuzzy string matching.",
+          "default": true
+        },
+        "duplicateSimilarityThreshold": {
+          "title": "Duplicate Similarity Threshold",
+          "type": "number",
+          "description": "Similarity threshold (0-1) for considering two texts as duplicates. Higher = more strict.",
+          "minimum": 0.5,
+          "maximum": 1.0,
+          "default": 0.85
+        },
+        "detectPII": {
+          "title": "Detect PII (Personal Identifiable Information)",
+          "type": "boolean",
+          "description": "Detect emails, phone numbers, and other PII for GDPR compliance.",
+          "default": true
+        },
+        "minTextLength": {
+          "title": "Minimum Text Length",
+          "type": "integer",
+          "description": "Reject text samples shorter than this many characters. Set to 0 to disable.",
+          "minimum": 0,
+          "maximum": 10000,
+          "default": 10
+        },
+        "maxTextLength": {
+          "title": "Maximum Text Length",
+          "type": "integer",
+          "description": "Reject text samples longer than this many characters. Set to 0 to disable.",
+          "minimum": 0,
+          "maximum": 1000000,
+          "default": 0
+        }
+      },
+      "default": {
+        "detectDuplicates": true,
+        "duplicateSimilarityThreshold": 0.85,
+        "detectPII": true,
+        "minTextLength": 10,
+        "maxTextLength": 0
+      }
+    },
+    "schemaValidation": {
+      "title": "Schema Validation",
+      "type": "object",
+      "description": "Optionally validate each item against a JSON schema. Leave empty to skip schema validation.",
+      "editor": "json",
+      "prefill": {},
+      "example": {
+        "type": "object",
+        "required": ["text", "label"],
+        "properties": {
+          "text": {"type": "string"},
+          "label": {"type": "string", "enum": ["positive", "negative", "neutral"]}
+        }
+      }
+    },
+    "outputOptions": {
+      "title": "Output Options",
+      "type": "object",
+      "description": "Control what gets included in the output dataset.",
+      "editor": "json",
+      "properties": {
+        "includeOriginal": {
+          "title": "Include Original Data",
+          "type": "boolean",
+          "description": "Include all original fields from input items in the output.",
+          "default": true
+        },
+        "flagOnly": {
+          "title": "Flag Only Mode",
+          "type": "boolean",
+          "description": "Keep all items but add validation flags instead of filtering out invalid items.",
+          "default": false
+        },
+        "removePII": {
+          "title": "Remove PII",
+          "type": "boolean",
+          "description": "Automatically redact detected PII from text (replaces with [REDACTED]).",
+          "default": false
+        }
+      },
+      "default": {
+        "includeOriginal": true,
+        "flagOnly": false,
+        "removePII": false
+      }
+    },
+    "maxItems": {
+      "title": "Maximum Items to Process",
+      "type": "integer",
+      "description": "Limit the number of items to process from the input dataset. Set to 0 to process all items.",
+      "minimum": 0,
+      "maximum": 1000000,
+      "default": 0,
+      "unit": "items"
+    }
+  },
+  "required": ["datasetId"]
+}

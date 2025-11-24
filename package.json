@@ -1,0 +1,32 @@
+{
+  "name": "ai-training-data-enricher",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Enterprise-grade data enrichment and validation for LLM training datasets. Detects duplicates, validates schemas, enriches with sentiment/entities/embeddings, and ensures GDPR compliance.",
+  "main": "dist/main.js",
+  "scripts": {
+    "start": "node dist/main.js",
+    "build": "tsc",
+    "dev": "tsc && node dist/main.js",
+    "test": "echo \"Tests coming soon\" && exit 0"
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "apify": "^3.2.0",
+    "crawlee": "^3.7.0",
+    "zod": "^3.22.0",
+    "natural": "^6.10.0",
+    "compromise": "^14.10.0",
+    "fuzzyset": "^1.0.7",
+    "email-validator": "^2.0.4",
+    "phone": "^3.1.41"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
